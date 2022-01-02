@@ -1,0 +1,76 @@
+import {action, makeObservable, observable} from 'mobx';
+import {act} from 'react-test-renderer';
+import {
+  cityID,
+  cityName,
+  FORECAST_KEY,
+  OPEN_WEATHER_KEY,
+} from '../../utils/Constants';
+
+class WeatherForecastRepository {
+  weatherForcastList: any = [];
+  constructor() {
+    makeObservable(this, {
+      weatherForcastList: observable,
+      setForecastList: action,
+    });
+
+    this.callWeatherForecastApi();
+  }
+
+  setForecastList(dataList: any) {
+    this.weatherForcastList = [...dataList];
+  }
+
+  getForecastData() {
+    return this.weatherForcastList;
+  }
+
+  async callWeatherForecastApi() {
+    let promises: any = [];
+    let temp_data: any = [];
+
+    promises = cityName.map(item => {
+      // return fetch(
+      //   'http://api.weatherapi.com/v1/forecast.json?key=' +
+      //     FORECAST_KEY +
+      //     '&q=' +
+      //     item +
+      //     '&days=5&aqi=no&alerts=no',
+      //   {
+      //     method: 'GET',
+      //     headers: {
+      //       Accept: 'application/json',
+      //       'Content-Type': 'application/json',
+      //     },
+      //   },
+      // ).then(data => {
+      //   return data;
+      // });
+
+      return fetch(
+        'http://api.weatherapi.com/v1/forecast.json?key=ccb5ff8268ce4f64b70162244220101&q=Madrid&days=5&aqi=no&alerts=no',
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        },
+      ).then(data => {
+        return data;
+      });
+    });
+
+    await Promise.all(promises)
+      .then(data => (temp_data = data))
+      .catch(function handleError(error) {
+        console.log('Error' + error);
+      });
+
+    console.log('I have forecast data');
+    console.log(promises);
+  }
+}
+
+export default WeatherForecastRepository;

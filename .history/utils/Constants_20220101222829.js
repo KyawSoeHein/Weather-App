@@ -1,0 +1,1 @@
+export let OPEN_WEATHER_KEY = '00d3701186a5905b85a621301eee5efb';
